@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -12,48 +6,42 @@ import {
   View,
   AppRegistry
 } from 'react-native';
-AppRegistry.registerComponent('AppPSI', () => App);
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import { Navigator } from 'react-native-deprecated-custom-components';
 
-type Props = {};
-export default class App extends Component<Props> {
+import CenaPrincipalPSI from './src/components/CenaPrincipalPSI';
+import BalancoPSI from './src/components/BalancoPSI';
+import EstoquePSI from './src/components/EstoquePSI';
+import HistoricoPSI from './src/components/HistoricoPSI';
+import ListaComprasPSI from './src/components/ListaComprasPSI';
+
+
+export default class AppPSI extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
+      <Navigator
+        //Definindo a cena inicial
+        initialRoute = {{ id : 'a'}}
+        renderScene = {(route, navigator) => {
+          /*Definir a cena com base na rota*/
+          if(route.id === 'a'){
+            return(<CenaPrincipalPSI navigator = {navigator}/>);
+          }
+          else if (route.id === 'b'){
+            return(<BalancoPSI navigator = {navigator}/>);
+          }
+          else if (route.id === 'c'){
+            return(<EstoquePSI navigator = {navigator}/>);
+          }
+          else if (route.id === 'd'){
+            return(<HistoricoPSI navigator = {navigator}/>);
+          }
+          else if (route.id === 'e'){
+            return(<ListaComprasPSI navigator = {navigator}/>);
+          }
+        }}
+      />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+AppRegistry.registerComponent('AppPSI', () => AppPSI);
