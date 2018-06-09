@@ -10,6 +10,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
+import firebase from 'firebase';
 
 const maca = require('../imgs/maca.png');
 const mais = require('../imgs/btn_mais.jpg');
@@ -17,41 +18,35 @@ const menos = require('../imgs/btn_menos.jpg');
 
 const {altura, largura} = Dimensions.get('window');
 
-class QuantidadeLabel extends Component<Props> {
-
-  render(){
-    return(
-      <View>
-        <Text>{this.props.quantidadeLabel}</Text>
-      </View>
-    );
-  }
-}
-
 export default class Produto extends Component<Props> {
 
   constructor(props){
     super(props);
-    this.state = {  quantidadeTexto: this.props.val.quantidade};
+    this.state = { quantidade : this.props.val.quantidade ,keyProd:this.props.val.keyProd}
   }
 
   mais(){
-    var flag = 0;
-    if(flag == 0){
-      var quantidade = this.props.val.quantidade + 1;
-      flag = flag + 1;
-    }
-    else {
-      quantidade = quantidade + 1;
-    }
-    this.setState({quantidadeTexto : quantidade}
-                  );
+    this.setState({
+      quantidade: this.state.quantidade+1
+    })
+    var proQntUp = firebase.database().ref("produtos")
+    proQntUp.child(this.props.val.keyProd).child("quantidade").set(this.state.quantidade);
+    return(<EstoquePSI navigator = {navigator}/>);
   }
 
   menos(){
-    var quantidade = retornaValor();
-    this.setState({quantidadeTexto : quantidade - 1}
-                  );
+    if ((this.state.quantidade-1)<0){
+      this.setState({
+      quantidade: 0
+    })
+    }
+    else{
+      this.setState({
+        quantidade: this.state.quantidade-1
+      })
+    }
+    var proQntUp = firebase.database().ref("produtos")
+    proQntUp.child(this.props.val.keyProd).child("quantidade").set(this.state.quantidade);
   }
 
   render() {
@@ -59,15 +54,17 @@ export default class Produto extends Component<Props> {
       <View style = {styles.objCompleto} key={this.props.keyval}>
         <View>
           <Image
-              source = {maca}
-            />
+            source = {maca}
+          />
         </View>
         <View style = {styles.objProduto}>
           <Text>{this.props.val.nome}</Text>
           <Text>{this.props.val.data}</Text>
         </View>
         <View style = {styles.objQntView}>
-          <QuantidadeLabel style = {styles.styleQuantidade} quantidadeLabel = {this.state.quantidadeTexto}></QuantidadeLabel>
+          <View>
+            <Text style = {styles.styleQuantidade}>{this.props.val.quantidade}</Text>
+          </View>
           <View style = {styles.styleBtn}>
             <TouchableOpacity onPress={() => this.mais()}>
             <Image
@@ -108,7 +105,7 @@ const styles = StyleSheet.create ({
     justifyContent: 'space-between'
   },
   styleQuantidade:{
-    paddingRight: 20,
+    paddingRight: 40,
     paddingTop: 10,
     paddingBottom: 8
   },

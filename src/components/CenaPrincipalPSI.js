@@ -14,6 +14,8 @@ import {
 const {altura, largura} = Dimensions.get('window');
 
 import BarraNavegacaoPSI from './BarraNavegacaoPSI';
+import Produto from './Produto';
+import Estoque from './EstoquePSI';
 
 //importando imagens do projeto
 const logo = require('../imgs/inventario.jpg');

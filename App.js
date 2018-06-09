@@ -7,15 +7,29 @@ import {
   AppRegistry
 } from 'react-native';
 import { Navigator } from 'react-native-deprecated-custom-components';
-
+import firebase from 'firebase';
 import CenaPrincipalPSI from './src/components/CenaPrincipalPSI';
 import BalancoPSI from './src/components/BalancoPSI';
 import EstoquePSI from './src/components/EstoquePSI';
 import HistoricoPSI from './src/components/HistoricoPSI';
 import ListaComprasPSI from './src/components/ListaComprasPSI';
-
+import FormProduto from './src/components/FormProduto';
 
 export default class AppPSI extends Component<Props> {
+
+  //Conexão com firebase WEB
+  componentWillMount(){
+    var config = {
+    apiKey: "AIzaSyBQ6i1N604rJj8UL1mQe79IBDNvUF97QsY",
+    authDomain: "apppsi-86e5d.firebaseapp.com",
+    databaseURL: "https://apppsi-86e5d.firebaseio.com",
+    projectId: "apppsi-86e5d",
+    storageBucket: "apppsi-86e5d.appspot.com",
+    messagingSenderId: "83686605123"
+    };
+    firebase.initializeApp(config);
+  }
+
   render() {
     return (
       <Navigator
@@ -38,7 +52,11 @@ export default class AppPSI extends Component<Props> {
           else if (route.id === 'e'){
             return(<ListaComprasPSI navigator = {navigator}/>);
           }
-        }}
+          else if (route.id === 'f'){
+            return(<FormProduto navigator = {navigator}/>);
+          }
+        }
+      }
       />
     );
   }
