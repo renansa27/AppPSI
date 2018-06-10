@@ -58,10 +58,6 @@ export default class FormProduto extends Component<Props> {
             />
           </View>
           <Button
-            onPress={() => this.props.navigator.push({id:'e'})}
-            title = 'Cancelar'
-          />
-          <Button
             onPress={() => this.salvar()}
             title = 'Salvar'
           />

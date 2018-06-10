@@ -20,46 +20,83 @@ const {altura, largura} = Dimensions.get('window');
 const maca = require('../imgs/maca.png');
 
 export default class EstoquePSI extends Component<Props> {
-  
-  listarDados(){
-    var produto = firebase.database().ref("produtos");
-    produto.on('value', (snapshot)=>{
-        var produtosData = snapshot.val();
-        var keys = Object.keys(produtosData);
-        for(var i=0;i<keys.length;i++){
-          var ke = keys[i];
-          var nome = produtosData[ke].nome;
-          var quantidade = produtosData[ke].quantidade;
-          var data = produtosData[ke].dataInserido;
-          var dataVenci = produtosData[ke].dataVencimento;
-          produto = {nome,quantidade,data,dataVenci};
-          this.state.produtoArray.push({
-            'keyProd':ke,
-            'imagem':{maca},
-            'nome':nome,
-            'data':dataVenci,
-            'quantidade':parseInt(quantidade)
-          });
-          this.setState({produtoArray: this.state.produtoArray});
-        }
-    });
+  constructor(props) {
+    super(props);
+    this.state = {
+      produtoArray : [],
+      keyProd:'',
+      imagem: '',
+      nome: '',
+      date: '',
+      quantidade: '',
+    };
   }
 
-	state = {
-    	produtoArray : [],
-      keyProd:'',
-    	imagem: '',
-    	nome: '',
-    	data: '',
-    	quantidade: ''
-  	}
+  mais(key){
+    this.setState({produtoArray: this.state.produtoArray});
+    produto={
+      'keyProd':this.state.produtoArray[key].keyProd,
+      'imagem':{maca},
+      'nome':this.state.produtoArray[key].nome,
+      'date':this.state.produtoArray[key].date,
+      'quantidade':this.state.produtoArray[key].quantidade+1
+    };
+    this.state.produtoArray.splice(key,1,produto);
+    //this.setState({produtoArray: produto});
+    var proQntUp = firebase.database().ref("produtos");
+    proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+  }
+
+  menos(key){
+    if (this.state.produtoArray[key].quantidade==0){
+      var tamanho = this.state.produtoArray.length();
+    }
+    else{
+      this.state.produtoArray.split(key,3);
+      this.setState({produtoArray: this.state.produtoArray});
+      produto={
+        'keyProd':this.state.produtoArray[key].keyProd,
+        'imagem':{maca},
+        'nome':this.state.produtoArray[key].nome,
+        'date':this.state.produtoArray[key].date,
+        'quantidade':this.state.produtoArray[key].quantidade-1
+      };
+      this.state.produtoArray.splice(key,1,produto);
+      this.setState({produtoArray: produto});
+      var proQntUp = firebase.database().ref("produtos");
+      proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+    }
+  }
 
   	render() {
-
-      let produtos = this.state.produtoArray.map((val,key)=>{
-        return <Produto key={key} keyval= {key} val={val} />
-      });
-
+      if(this.state.produtoArray[0] == null)
+        {
+          var produto = firebase.database().ref("produtos");
+          produto.once('value', (snapshot)=>{
+              var produtosData = snapshot.val();
+              var keys = Object.keys(produtosData);
+              for(var i=0;i<keys.length;i++){
+                var ke = keys[i];
+                var nome = produtosData[ke].nome;
+                var quantidade = produtosData[ke].quantidade;
+                var date = produtosData[ke].dataInserido;
+                var dateVenci = produtosData[ke].dataVencimento;
+                produto = {nome,quantidade,date,dateVenci};
+                this.state.produtoArray.push({
+                  'keyProd':ke,
+                  'imagem':{maca},
+                  'nome':nome,
+                  'date':dateVenci,
+                  'quantidade':parseInt(quantidade)
+                });
+                this.setState({produtoArray: this.state.produtoArray});
+              }
+          });
+        }
+      let produtos = [];
+        produtos = this.state.produtoArray.map((val,key)=>{
+          return (<Produto key={key} keyval= {key} val={val} moreQuantidade={ ()=>this.mais(key)} lessQuantidade={ ()=>this.menos(key)}/>);
+        });
     	return (
       	<View>
         	<StatusBar
@@ -71,20 +108,17 @@ export default class EstoquePSI extends Component<Props> {
             onPress={() => this.props.navigator.push({id:'f'})}
             title = 'Adicionar novo produto'
           />
-          <Button
-            onPress={this.listarDados.bind(this)}
-            title = 'Listar produtos'
-          />
-        	<ScrollView contentContainerStyle = {style.contentContainer}>
+          
+        	<ScrollView  contentContainerStyle = {style.contentContainer}>
         		{produtos}
         	</ScrollView>
       	</View>
      	);
   	}
-}
-
+  }
 const style = StyleSheet.create ({
 	contentContainer: {
-		paddingVertical: 20
+		paddingVertical: 20,
+    marginBottom:40
 	}
 });

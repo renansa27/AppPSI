@@ -22,31 +22,7 @@ export default class Produto extends Component<Props> {
 
   constructor(props){
     super(props);
-    this.state = { quantidade : this.props.val.quantidade ,keyProd:this.props.val.keyProd}
-  }
-
-  mais(){
-    this.setState({
-      quantidade: this.state.quantidade+1
-    })
-    var proQntUp = firebase.database().ref("produtos")
-    proQntUp.child(this.props.val.keyProd).child("quantidade").set(this.state.quantidade);
-    return(<EstoquePSI navigator = {navigator}/>);
-  }
-
-  menos(){
-    if ((this.state.quantidade-1)<0){
-      this.setState({
-      quantidade: 0
-    })
-    }
-    else{
-      this.setState({
-        quantidade: this.state.quantidade-1
-      })
-    }
-    var proQntUp = firebase.database().ref("produtos")
-    proQntUp.child(this.props.val.keyProd).child("quantidade").set(this.state.quantidade);
+    this.state = { keyProd:this.props.val.keyProd}
   }
 
   render() {
@@ -59,19 +35,19 @@ export default class Produto extends Component<Props> {
         </View>
         <View style = {styles.objProduto}>
           <Text>{this.props.val.nome}</Text>
-          <Text>{this.props.val.data}</Text>
+          <Text>{this.props.val.date}</Text>
         </View>
         <View style = {styles.objQntView}>
           <View>
             <Text style = {styles.styleQuantidade}>{this.props.val.quantidade}</Text>
           </View>
           <View style = {styles.styleBtn}>
-            <TouchableOpacity onPress={() => this.mais()}>
+            <TouchableOpacity onPress={this.props.moreQuantidade}>
             <Image
               source={mais}
             />
             </TouchableOpacity>
-            <TouchableOpacity style = {styles.styleBtnInt} onPress={()=>this.menos()}>
+            <TouchableOpacity style = {styles.styleBtnInt} onPress={this.props.lessQuantidade}>
               <Image
                 source={menos}
               />
