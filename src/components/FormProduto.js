@@ -18,12 +18,12 @@ const menos = require('../imgs/btn_menos.jpg');
 
 export default class FormProduto extends Component<Props> {
   constructor(props){
-      super(props);
-      this.state = {  textNome: '', 
-                      textValidade: '', 
-                      textQuantidade:''
-                    };
-    }
+    super(props);
+    this.state = {  textNome: '', 
+                    textValidade: '', 
+                    textQuantidade:''
+                  };
+  }
   render() {
     return (
       <View>
@@ -76,14 +76,17 @@ export default class FormProduto extends Component<Props> {
       produtos.push().set(
       {
         nome:this.state.textNome,
-        quantidade:this.state.textQuantidade,
+        quantidadeInserido:parseInt(this.state.textQuantidade),
+        quantidadeRemovido:0,
+        quantidade:parseInt(this.state.textQuantidade),
         dataInserido:data,
+        dataAlteracao:data,
         dataVencimento:this.state.textValidade
       });
     }catch(error){
       alert(error);
     }
-    this.props.navigator.push({id:'e'})
+    this.props.navigator.pop();
   }
 }
 

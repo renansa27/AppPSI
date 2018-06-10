@@ -28,37 +28,112 @@ export default class EstoquePSI extends Component<Props> {
       imagem: '',
       nome: '',
       date: '',
+      dataAlteracao: '',
       quantidade: '',
+      quantidadeInserido:'',
+      quantidadeRemovido:'', 
     };
   }
 
   mais(key){
+    var d = new Date();
+    var mes = d.getMonth()+1;
+    var data = d.getDate()+"/"+ mes + "/" +d.getFullYear();
     this.setState({produtoArray: this.state.produtoArray});
-    produto={
-      'keyProd':this.state.produtoArray[key].keyProd,
-      'imagem':{maca},
-      'nome':this.state.produtoArray[key].nome,
-      'date':this.state.produtoArray[key].date,
-      'quantidade':this.state.produtoArray[key].quantidade+1
-    };
-    this.state.produtoArray.splice(key,1,produto);
-    var proQntUp = firebase.database().ref("produtos");
-    proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
-  }
-
-  menos(key){
-    if (this.state.produtoArray[key].quantidade>0){
-      this.setState({produtoArray: this.state.produtoArray});
+    if(this.state.produtoArray[key].quantidade==0){
       produto={
         'keyProd':this.state.produtoArray[key].keyProd,
         'imagem':{maca},
         'nome':this.state.produtoArray[key].nome,
         'date':this.state.produtoArray[key].date,
-        'quantidade':this.state.produtoArray[key].quantidade-1
+        'quantidade':1,
+        'quantidadeRemovido':this.state.produtoArray[key].quantidadeRemovido,
+        'dataAlteracao': data,
+        'quantidadeInserido':this.state.produtoArray[key].quantidadeInserido+1
       };
-      this.state.produtoArray.splice(key,1,produto);
-      var proQntUp = firebase.database().ref("produtos");
-      proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+      try{
+        this.state.produtoArray.splice(key,1,produto);
+        var produto = firebase.database().ref("produtos");
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeRemovido").set(this.state.produtoArray[key].quantidadeRemovido);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeInserido").set(this.state.produtoArray[key].quantidadeInserido);
+        produto.child(this.state.produtoArray[key].keyProd).child("dataAlteracao").set(data);
+      }catch(erro){
+
+      }
+    } else if(this.state.produtoArray[key].quantidade>0){
+      produto={
+        'keyProd':this.state.produtoArray[key].keyProd,
+        'imagem':{maca},
+        'nome':this.state.produtoArray[key].nome,
+        'date':this.state.produtoArray[key].date,
+        'quantidade':this.state.produtoArray[key].quantidade+1,
+        'quantidadeRemovido':this.state.produtoArray[key].quantidadeRemovido,
+        'dataAlteracao': data,
+        'quantidadeInserido':this.state.produtoArray[key].quantidadeInserido+1
+      };
+      try{
+        this.state.produtoArray.splice(key,1,produto);
+        var produto = firebase.database().ref("produtos");
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeRemovido").set(this.state.produtoArray[key].quantidadeRemovido);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeInserido").set(this.state.produtoArray[key].quantidadeInserido);
+        produto.child(this.state.produtoArray[key].keyProd).child("dataAlteracao").set(data);
+      }catch(erro){
+
+      }
+    }
+  }
+
+  menos(key){
+    var d = new Date();
+    var mes = d.getMonth()+1;
+    var data = d.getDate()+"/"+ mes + "/" +d.getFullYear();
+    this.setState({produtoArray: this.state.produtoArray});
+    if (this.state.produtoArray[key].quantidade>1){
+      produto={
+        'keyProd':this.state.produtoArray[key].keyProd,
+        'imagem':{maca},
+        'nome':this.state.produtoArray[key].nome,
+        'date':this.state.produtoArray[key].date,
+        'dataAlteracao': data,
+        'quantidade':this.state.produtoArray[key].quantidade-1,
+        'quantidadeInserido':this.state.produtoArray[key].quantidadeInserido,
+        'quantidadeRemovido':this.state.produtoArray[key].quantidadeRemovido+1
+      };
+      try{
+        this.state.produtoArray.splice(key,1,produto);
+        var produto = firebase.database().ref("produtos");
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeRemovido").set(this.state.produtoArray[key].quantidadeRemovido);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeInserido").set(this.state.produtoArray[key].quantidadeInserido);
+        produto.child(this.state.produtoArray[key].keyProd).child("dataAlteracao").set(data);
+      }
+      catch(erro){
+
+      }
+    }else if(this.state.produtoArray[key].quantidade==1){
+      produto={
+        'keyProd':this.state.produtoArray[key].keyProd,
+        'imagem':{maca},
+        'nome':this.state.produtoArray[key].nome,
+        'date':this.state.produtoArray[key].date,
+        'dataAlteracao': data,
+        'quantidade':0,
+        'quantidadeInserido':this.state.produtoArray[key].quantidadeInserido,
+        'quantidadeRemovido':this.state.produtoArray[key].quantidadeRemovido+1
+      };
+      try{
+        this.state.produtoArray.splice(key,1,produto);
+        var produto = firebase.database().ref("produtos");
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeRemovido").set(this.state.produtoArray[key].quantidadeRemovido);
+        produto.child(this.state.produtoArray[key].keyProd).child("quantidadeInserido").set(this.state.produtoArray[key].quantidadeInserido);
+        produto.child(this.state.produtoArray[key].keyProd).child("dataAlteracao").set(data);
+      }
+      catch(erro){
+        alert("Segundo if: "+erro);
+      }
     }
     else{
       alert("Produto não tem mais no estoque!");
@@ -71,22 +146,30 @@ export default class EstoquePSI extends Component<Props> {
           var produto = firebase.database().ref("produtos");
           produto.once('value', (snapshot)=>{
               var produtosData = snapshot.val();
+              if(produtosData!=null){
               var keys = Object.keys(produtosData);
-              for(var i=0;i<keys.length;i++){
-                var ke = keys[i];
-                var nome = produtosData[ke].nome;
-                var quantidade = produtosData[ke].quantidade;
-                var date = produtosData[ke].dataInserido;
-                var dateVenci = produtosData[ke].dataVencimento;
-                produto = {nome,quantidade,date,dateVenci};
-                this.state.produtoArray.push({
-                  'keyProd':ke,
-                  'imagem':{maca},
-                  'nome':nome,
-                  'date':dateVenci,
-                  'quantidade':parseInt(quantidade)
-                });
-                this.setState({produtoArray: this.state.produtoArray});
+                for(var i=0;i<keys.length;i++){
+                  var ke = keys[i];
+                  var nome = produtosData[ke].nome;
+                  var quantidade = produtosData[ke].quantidade;
+                  var quantidadeInserido = produtosData[ke].quantidadeInserido;
+                  var quantidadeRemovido = produtosData[ke].quantidadeRemovido;
+                  var dataAlteracao = produtosData[ke].dataAlteracao;
+                  var date = produtosData[ke].dataInserido;
+                  var dateVenci = produtosData[ke].dataVencimento;
+                  produto = {nome,quantidade,date,dateVenci};
+                  this.state.produtoArray.push({
+                    'keyProd':ke,
+                    'imagem':{maca},
+                    'nome':nome,
+                    'date':dateVenci,
+                    'dataAlteracao':'',
+                    'quantidade':parseInt(quantidade),
+                    'quantidadeInserido':parseInt(quantidadeInserido),
+                    'quantidadeRemovido':parseInt(quantidadeRemovido),
+                  });
+                  this.setState({produtoArray: this.state.produtoArray});
+                }
               }
           });
         }
@@ -116,6 +199,6 @@ export default class EstoquePSI extends Component<Props> {
 const style = StyleSheet.create ({
 	contentContainer: {
 		paddingVertical: 20,
-    marginBottom:40
+    paddingBottom: (altura*0,85)
 	}
 });
