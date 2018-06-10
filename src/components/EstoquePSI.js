@@ -42,17 +42,12 @@ export default class EstoquePSI extends Component<Props> {
       'quantidade':this.state.produtoArray[key].quantidade+1
     };
     this.state.produtoArray.splice(key,1,produto);
-    //this.setState({produtoArray: produto});
     var proQntUp = firebase.database().ref("produtos");
     proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
   }
 
   menos(key){
-    if (this.state.produtoArray[key].quantidade==0){
-      var tamanho = this.state.produtoArray.length();
-    }
-    else{
-      this.state.produtoArray.split(key,3);
+    if (this.state.produtoArray[key].quantidade>0){
       this.setState({produtoArray: this.state.produtoArray});
       produto={
         'keyProd':this.state.produtoArray[key].keyProd,
@@ -62,9 +57,11 @@ export default class EstoquePSI extends Component<Props> {
         'quantidade':this.state.produtoArray[key].quantidade-1
       };
       this.state.produtoArray.splice(key,1,produto);
-      this.setState({produtoArray: produto});
       var proQntUp = firebase.database().ref("produtos");
       proQntUp.child(this.state.produtoArray[key].keyProd).child("quantidade").set(this.state.produtoArray[key].quantidade);
+    }
+    else{
+      alert("Produto não tem mais no estoque!");
     }
   }
 
