@@ -141,44 +141,43 @@ export default class EstoquePSI extends Component<Props> {
   }
 
   	render() {
-      if(this.state.produtoArray[0] == null)
-        {
+      if(this.state.produtoArray[0] == null){
           var produto = firebase.database().ref("produtos");
           produto.once('value', (snapshot)=>{
-              var produtosData = snapshot.val();
-              if(produtosData!=null){
+            var produtosData = snapshot.val();
+            if(produtosData!=null){
               var keys = Object.keys(produtosData);
-                for(var i=0;i<keys.length;i++){
-                  var ke = keys[i];
-                  var nome = produtosData[ke].nome;
-                  var quantidade = produtosData[ke].quantidade;
-                  var quantidadeInserido = produtosData[ke].quantidadeInserido;
-                  var quantidadeRemovido = produtosData[ke].quantidadeRemovido;
-                  var dataAlteracao = produtosData[ke].dataAlteracao;
-                  var date = produtosData[ke].dataInserido;
-                  var dateVenci = produtosData[ke].dataVencimento;
-                  produto = {nome,quantidade,date,dateVenci};
-                  this.state.produtoArray.push({
-                    'keyProd':ke,
-                    'imagem':{maca},
-                    'nome':nome,
-                    'date':dateVenci,
-                    'dataAlteracao':'',
-                    'quantidade':parseInt(quantidade),
-                    'quantidadeInserido':parseInt(quantidadeInserido),
-                    'quantidadeRemovido':parseInt(quantidadeRemovido),
-                  });
-                  this.setState({produtoArray: this.state.produtoArray});
-                }
+              for(var i=0;i<keys.length;i++){
+                var ke = keys[i];
+                var nome = produtosData[ke].nome;
+                var quantidade = produtosData[ke].quantidade;
+                var quantidadeInserido = produtosData[ke].quantidadeInserido;
+                var quantidadeRemovido = produtosData[ke].quantidadeRemovido;
+                var dataAlteracao = produtosData[ke].dataAlteracao;
+                var date = produtosData[ke].dataInserido;
+                var dateVenci = produtosData[ke].dataVencimento;
+                produto = {nome,quantidade,date,dateVenci};
+                this.state.produtoArray.push({
+                  'keyProd':ke,
+                  'imagem':{maca},
+                  'nome':nome,
+                  'date':dateVenci,
+                  'dataAlteracao':'',
+                  'quantidade':parseInt(quantidade),
+                  'quantidadeInserido':parseInt(quantidadeInserido),
+                  'quantidadeRemovido':parseInt(quantidadeRemovido),
+                });
+                this.setState({produtoArray: this.state.produtoArray});
               }
-          });
-        }
+            }
+        });
+      }
       let produtos = [];
         produtos = this.state.produtoArray.map((val,key)=>{
           return (<Produto key={key} keyval= {key} val={val} moreQuantidade={ ()=>this.mais(key)} lessQuantidade={ ()=>this.menos(key)}/>);
         });
     	return (
-      	<View>
+      	<View style={{flex:1, backgroundColor: '#FFF'}}>
         	<StatusBar
           	//hidden (Esconde a status bar do app)
           	backgroundColor = '#CCC'
@@ -199,6 +198,6 @@ export default class EstoquePSI extends Component<Props> {
 const style = StyleSheet.create ({
 	contentContainer: {
 		paddingVertical: 20,
-    paddingBottom: (altura*0,85)
+    paddingBottom: (altura*0,5)
 	}
 });

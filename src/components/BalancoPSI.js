@@ -89,7 +89,7 @@ export default class BalancoPSI extends Component<Props> {
           return (<Produto key={key} keyval= {key} val={val} moreQuantidade={ ()=>this.mais(key)} lessQuantidade={ ()=>this.menos(key)}/>);
         });
       return (
-        <View>
+        <View style={{flex:1, backgroundColor: '#FFF'}}>
           <StatusBar
             //hidden (Esconde a status bar do app)
             backgroundColor = '#CCC'

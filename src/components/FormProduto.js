@@ -26,7 +26,7 @@ export default class FormProduto extends Component<Props> {
   }
   render() {
     return (
-      <View>
+      <View style={{flex:1, backgroundColor: '#FFF'}}>
         <StatusBar
           //hidden (Esconde a status bar do app)
           backgroundColor = '#CCC'
@@ -86,7 +86,8 @@ export default class FormProduto extends Component<Props> {
     }catch(error){
       alert(error);
     }
-    this.props.navigator.pop();
+    //this.props.navigator.push({id:'a'});
+    this.props.navigator.push({id:'c'});
   }
 }
 

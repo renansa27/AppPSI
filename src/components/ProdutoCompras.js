@@ -24,7 +24,7 @@ export default class ProdutoCompras extends Component<Props> {
     super(props);
     this.state = { keyProd:this.props.val.keyProd}
   }
-  
+
 render() {
     return (
       <View style = {styles.objCompleto} key={this.props.keyval}>
