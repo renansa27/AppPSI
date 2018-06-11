@@ -31,6 +31,7 @@ export default class AppPSI extends Component<Props> {
   }
 
   render() {
+    console.disableYellowBox = true;
     return (
       <Navigator
         //Definindo a cena inicial
