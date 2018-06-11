@@ -8,7 +8,8 @@ import {
   Image,
   Dimensions,
   ScrollView,
-  Button
+  Button,
+  Alert
 } from 'react-native';
 import firebase from 'firebase';
 import BarraNavegacaoPSI from './BarraNavegacaoPSI';
@@ -85,6 +86,17 @@ export default class EstoquePSI extends Component<Props> {
     }
   }
 
+  excluirProduto(key){
+    try{
+      var produto = firebase.database().ref("produtos");
+      produto.child(this.state.produtoArray[key].keyProd).remove();
+      this.state.produtoArray.splice(key,1);
+    }catch(erro){
+
+    }
+    this.props.navigator.push({id:'c'});
+  }
+
   menos(key){
     var d = new Date();
     var mes = d.getMonth()+1;
@@ -134,9 +146,16 @@ export default class EstoquePSI extends Component<Props> {
       catch(erro){
         alert("Segundo if: "+erro);
       }
-    }
-    else{
-      alert("Produto não tem mais no estoque!");
+    }else if(this.state.produtoArray[key].quantidade==0){
+      Alert.alert(
+        'Excluir o produto?',
+        '',
+        [
+          {text: 'Não'},
+          {text: 'Sim', onPress: ()=>this.excluirProduto(key)},
+        ],
+        { cancelable: false }
+      )
     }
   }
 

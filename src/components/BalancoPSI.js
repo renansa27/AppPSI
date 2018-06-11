@@ -105,7 +105,7 @@ export default class BalancoPSI extends Component<Props> {
 const style = StyleSheet.create ({
   contentContainer: {
     paddingVertical: 20,
-    paddingBottom: (altura*0,85)
+    paddingBottom: (altura*0,5)
     //flex:1
   }
 });
